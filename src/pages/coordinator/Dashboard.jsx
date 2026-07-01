@@ -10,6 +10,13 @@ export default function CoordinatorDashboard() {
   const [loading, setLoading] = useState(true);
   const [academic, setAcademic] = useState(null);
   const [scholarStats, setScholarStats] = useState([]);
+  const [filter, setFilter] = useState("All");
+const [search, setSearch] = useState("");
+const [scholarshipFilter, setScholarshipFilter] =
+  useState("All");
+  const ITEMS_PER_PAGE = 10;
+const [currentPage, setCurrentPage] = useState(1);
+
   const [upcomingDeadlines, setUpcomingDeadlines] = useState([]);
 const [showReportModal, setShowReportModal] = useState(false);
 const [form, setForm] = useState({
@@ -632,6 +639,69 @@ const updateStatus = async (id, status) => {
   });
 };
 
+  const filtered = applications.filter((a) => {
+
+  // Search Student ID
+  if (search) {
+
+  const keyword = search.toLowerCase();
+
+  const fullName =
+    `${a.students?.users?.first_name || ""} ${
+      a.students?.users?.last_name || ""
+    }`.toLowerCase();
+
+  const schoolId = String(
+  a.students?.school_id || ""
+).toLowerCase();
+
+  const scholarship =
+    (
+      a.scholarships?.scholarship_name || ""
+    ).toLowerCase();
+
+  const status =
+    (a.status || "").toLowerCase();
+
+  const matches =
+    fullName.includes(keyword) ||
+    schoolId.includes(keyword) ||
+    scholarship.includes(keyword) ||
+    status.includes(keyword);
+
+  if (!matches) return false;
+}
+
+  // Scholarship
+  if (
+    scholarshipFilter !== "All" &&
+    a.scholarships?.scholarship_name !== scholarshipFilter
+  ) {
+    return false;
+  }
+
+  // Status
+  if (
+    filter !== "All" &&
+    a.status !== filter
+  ) {
+    return false;
+  }
+
+  return true;
+
+});
+
+useEffect(() => {
+  setCurrentPage(1);
+}, [search, filter, scholarshipFilter]);
+
+const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+const paginatedApplications = filtered.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE
+);
 
   if (loading) return <p style={styles.loading}>Loading...</p>;
   
