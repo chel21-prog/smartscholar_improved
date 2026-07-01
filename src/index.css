@@ -1,0 +1,89 @@
+/* Base resets. Color/spacing/type tokens live in styles/tokens.css,
+   imported before this file in main.jsx. */
+
+:root {
+  font: 14px/1.5 var(--font-sans);
+  color-scheme: light;
+  color: var(--ink-700);
+  background: var(--ink-50);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* NOTE: this app intentionally renders light-only for now. The previous
+   `prefers-color-scheme: dark` block here flipped body colors to a dark
+   palette while every page's own styles stayed hard-coded light, which
+   produced a broken, half-dark, illegible UI for any student on a
+   dark-mode device. A real dark theme needs each page's surface colors
+   to use the tokens in styles/tokens.css rather than hard-coded hex
+   values, which is a larger pass than fits in this round of changes. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-50);
+  color: var(--ink-700);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--ink-900);
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  letter-spacing: -0.3px;
+  line-height: var(--leading-tight);
+}
+
+h2 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+}
+
+h3 {
+  font-size: var(--text-md);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--navy-600);
+}
+
+/* Real, working version of the mobile sidebar offset.
+   The previous copy of this rule was nested inside `:root`, which
+   means it was invalid CSS that the browser silently ignored - the
+   sidebar's own component CSS already handles becoming an overlay on
+   mobile, but the main content area never got told to stop reserving
+   space for it. */
+@media (max-width: 768px) {
+  .app-main {
+    margin-left: 0 !important;
+    padding-top: 76px !important;
+  }
+}
+
